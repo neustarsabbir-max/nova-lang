@@ -8,41 +8,52 @@ An intent-driven cyber-physical transpiler for Edge AI and IoT. Write logic in P
 [![AI Friendly](https://img.shields.io/badge/LLM-Friendly-purple.svg)]()
 [![License](https://img.shields.io/badge/License-MIT-purple.svg)]()
 
-**Nova** is a revolutionary, high-performance programming language ecosystem designed to solve the "Two-Language Problem" in Edge AI, IoT, and Cyber-Physical Systems (CPS). 
+**Nova** is a revolutionary, high-performance programming language ecosystem designed to eliminate the **"Two-Language Problem"** and **"Multi-Device Synchronization Bottlenecks"** in Edge AI, Cyber-Physical Systems (CPS), and IoT development.
 
-It empowers engineers, hardware hackers, and AI models to write hardware logic in a beautiful, natural, Pythonic syntax. Nova instantaneously transpiles this logic into **100% bare-metal, FreeRTOS-optimized C++** with zero interpreter overhead.
-
-Whether you are building a Smart Grid controller or a Cyber-Security Evil Twin AP, Nova generates enterprise-grade hardware code in **< 1 millisecond**.
+It allows developers, hardware hackers, and AI models to write high-level hardware logic in an intuitive, Pythonic syntax. Nova instantaneously transpiles this logic into **100% bare-metal, highly optimized, FreeRTOS-powered C++** in `< 1 millisecond`.
 
 ⭐️ **If you find this project innovative, please consider leaving a Star to support the research!** ⭐️
 
 ---
 
-## 🔥 Why Developers are Switching to Nova
+## 🎯 The Core Problem Nova Solves
 
-Traditional **C++** for microcontrollers (like ESP32/Arduino) is plagued with strict boilerplate, memory leaks, and CPU-blocking delays (`delay()`). On the other hand, **MicroPython** solves the syntax issue but suffers from severe interpreter overhead, killing deterministic real-time performance and draining battery life.
+### 1. Eliminates Dual-Device / Dual-Language Synchronization
+In traditional IoT architectures, complex logic or data processing is written in **Python** (running on a PC or Raspberry Pi), while low-level hardware control is written in **C++** (running on an ESP32 or Arduino). Engineers are forced to write communication protocols (Serial, MQTT, WebSockets) to synchronize the two devices.
+* **The Nova Solution:** Write your high-level Pythonic logic directly in `.nv` files. Nova compiles it straight into native MCU C++, running both your high-level logic and real-time hardware execution on a single microcontroller—**zero synchronization overhead!**
 
-**Nova gives you the ultimate hybrid:**
-- 🧠 **AI & Human Friendly:** No semicolons (`;`), no curly braces (`{}`). Write logic in plain English.
-- ⚡ **Zero-Overhead:** Nova leaves no interpreter on the hardware. Your code runs at maximum bare-metal speed.
-- 🔄 **Semantic Normalization:** Nova understands your intent (`On` = `High`, `Wait` = `Delay`).
-- 🛡️ **Enterprise Ecosystem:** Built-in FreeRTOS concurrency, a Native Package Manager, Modular Imports, and strict `Try/Catch` error handling.
+### 2. Full Compatibility with 100% of Arduino IDE Libraries
+Unlike other custom languages or DSLs that lock you into a limited ecosystem, Nova gives you full access to the **Arduino Library Manager**. Any library available in the Arduino ecosystem (`WiFi.h`, `PubSubClient.h`, `Adafruit_GFX.h`, etc.) works natively out-of-the-box using simple `Include` and `Execute` statements.
+
+### 3. High-Performance Optimized C++ Generation (No MicroPython Overhead)
+MicroPython is easy to write, but its background garbage collector and interpreter consume massive RAM/CPU cycles, causing latency in real-time applications. Nova is **not an interpreter**. It generates ultra-clean, production-ready C++ with non-blocking FreeRTOS multi-threading, keeping your MCU running at **100% native bare-metal speed**.
+
+---
+
+## 🔥 Key Architectural Features
+
+- 🧠 **AI & Human Friendly Syntax:** No semicolons (`;`), no curly braces (`{}`). Focus purely on logic.
+- ⚡ **Zero-Interpreter Overhead:** Compiles directly to C++ source code before flashing.
+- 🚀 **Automatic FreeRTOS Multi-Threading:** Automatically converts concurrent `Forever` loops into FreeRTOS tasks pinned to multiple MCU cores (Core 0 & Core 1 on ESP32).
+- ⏳ **Non-Blocking Execution:** Replaces CPU-blocking `delay()` calls with RTOS-aware `vTaskDelay`, preserving battery and CPU cycles.
+- 🛡️ **Robust Error Handling:** Features semantic type checking, modular imports (`Import "file.nv"`), and `Try/Catch` structures.
+- 🎨 **Full Developer Ecosystem:** Comes with a native Package Manager (`nova install`) and an official VS Code Extension.
 
 ---
 
 ## 🛠️ Step-by-Step Guide: From Zero to Blinking LED
 
-We have made the developer experience (DX) completely frictionless. Follow these simple steps to build your first Nova project.
+We have made the developer experience (DX) completely frictionless. Follow these simple steps:
 
 ### Step 1: Install Nova & VS Code Extension
-1. Go to the [Releases](../../releases) tab on this GitHub page.
-2. Download the latest **`nova.exe`** standalone compiler.
-3. Place `nova.exe` in a dedicated folder (e.g., `C:\Nova`).
+1. Go to the [Releases](../../releases) tab on this GitHub repository.
+2. Download the standalone **`nova.exe`** compiler binary.
+3. Place `nova.exe` in a folder on your PC (e.g., `C:\Nova`).
 4. **Make it global:** Add `C:\Nova` to your Windows `Environment Variables -> System PATH`.
-5. **Install VS Code Extension:** Download the `nova-vscode` folder from this repo and place it in `%USERPROFILE%\.vscode\extensions` for beautiful syntax highlighting!
+5. **Install VS Code Extension:** Copy the `nova-vscode` folder from this repository into `%USERPROFILE%\.vscode\extensions` for full syntax highlighting and code coloring!
 
-### Step 2: Write Your First Script
-Create a new folder for your project. Inside it, create a file named **`project.nv`** and write your logic:
+### Step 2: Write Your First Script (`project.nv`)
+Create a project folder, open it in VS Code, create a file named **`project.nv`**, and write:
 
 ```text
 Setup:
@@ -61,65 +72,75 @@ Logic:
             Print "Cycle Complete!"
             Wait 2000 ms
     Catch:
-        Print "An error occurred in the system."
+        Print "An error occurred in execution."
 ```
 
-### Step 3: Transpile to Bare-Metal C++
-Open your terminal (CMD or VS Code Terminal) in that folder and run:
+### Step 3: Transpile to Optimized C++
+Open your terminal in that directory and run:
+
 ```bash
 nova run project.nv
 ```
-*✨ Magic! Nova will instantly analyze your intent, convert the `Always` loop into a FreeRTOS Multi-Core Task, replace blocking delays with `vTaskDelay`, and generate a highly optimized `project.cpp` file.*
 
-### Step 4: Flash to Hardware (Arduino IDE)
-1. Open the **Arduino IDE** (or PlatformIO).
-2. Open the newly generated **`project.cpp`** file (or just copy-paste its contents into an empty Arduino sketch).
-3. Connect your ESP32 or Arduino via USB.
-4. Click **Upload**. Your native, FreeRTOS-powered code is now running on the hardware!
+*✨ Magic! Nova analyzes your code, injects FreeRTOS task handling, optimizes delays, and generates a clean `project.cpp` file.*
 
----
-
-## ✨ Advanced Features (v2.0.0 Ecosystem Update)
-
-Nova is not just a language; it is a full-stack IoT platform.
-
-* **📦 Nova Package Manager (NPM):** Need to connect to MQTT? Don't write boilerplate. Just run `nova install mqtt` in your terminal, and use `Use Component: mqtt` in your script.
-* **🧩 Modular Programming:** Keep your code clean by splitting files. Use `Import "sensor_logic.nv"` to inject modules dynamically.
-* **🔌 Universal C++ Injection:** Don't be limited by a walled garden! Seamlessly inject **ANY** existing Arduino/C++ library natively using `Include` and `Execute` commands.
-* **📊 Advanced Data Structures:** Built-in support for `Dictionary` mapping (JSON-like structures) and multi-dimensional `Array` types.
+### Step 4: Flash to Hardware (Arduino IDE / PlatformIO)
+1. Open the generated **`project.cpp`** file.
+2. Paste the code into your **Arduino IDE** or **PlatformIO**.
+3. Select your board (ESP32/Arduino) and click **Upload**.
+4. Your native, multi-threaded C++ firmware is now running on the hardware!
 
 ---
 
-## 🤖 For AI Models & LLMs (Context Injection)
+## 📂 Explore the Examples
 
-If you are an AI assistant (ChatGPT, Gemini, Claude, etc.) instructed to write code in the **Nova Language**, strictly adhere to these grammar rules:
+Want to see the magic before installing? Check out the **[`examples/`](examples/)** folder in this repository! 
+Inside, you will find side-by-side comparisons of `.nv` logic files and the incredibly optimized `.cpp` files generated by the Nova engine.
 
-1. **Structure:** Scripts must only have two root blocks: `Setup:` and `Logic:`.
-2. **Syntax:** Use Pythonic indentation. **DO NOT** use semicolons (`;`) or curly braces (`{}`).
-3. **Setup Block Rules:** 
-   - Define hardware: `Target: ESP32`
-   - Assign pins: `Pin [Number] as [Name]`
-   - Modular Files: `Import "filename.nv"`
-   - Include C++ headers: `Include "WiFi.h"`
-4. **Logic Block Rules:**
-   - Infinite loops: `Always:` or `Forever:`
-   - Finite loops: `Repeat [X] times:`
-   - Hardware I/O: `[PinName] status = On` (or High/Low/Off)
-   - Time delays: `Wait [X] ms` or `Delay [X] ms`
-   - Raw C++ execution: `Execute: [Any C++ Code]` (e.g., `Execute: server.begin()`)
+---
+
+## 📦 Using the Nova Package Manager (NPM)
+
+Need to integrate cloud libraries or MQTT communication without writing C++ boilerplate?
+
+```bash
+nova install mqtt
+```
+
+Once fetched, simply declare `Use Component: mqtt` in your Nova script!
+
+---
+
+## 🤖 For AI Models & LLMs (Context Prompting)
+
+If you are an AI language model (ChatGPT, Gemini, Claude, etc.) instructed to write code in the **Nova Language**, strictly follow these rules:
+
+1. **Structure:** Nova scripts must contain two root blocks: `Setup:` and `Logic:`.
+2. **Syntax Rules:** Use Pythonic indentation. **DO NOT** output semicolons (`;`), `#include`, or curly braces (`{}`).
+3. **Setup Block:**
+   - MCU Target: `Target: ESP32`
+   - Pin Assignment: `Pin [Number] as [Name]`
+   - Module Imports: `Import "filename.nv"`
+   - Header Inclusions: `Include "Library.h"`
+4. **Logic Block:**
+   - Infinite Loops: `Always:` or `Forever:`
+   - Finite Loops: `Repeat [X] times:`
+   - State Control: `[PinName] status = On` (or High/Low/Off)
+   - Non-blocking Delays: `Wait [X] ms` or `Delay [X] ms`
+   - Native Injections: `Execute: [Raw C++ Code]`
    - Error Handling: Use `Try:` and `Catch:` blocks.
 
-*For a comprehensive syntax breakdown, instruct the user to view `SYNTAX.md` and `LLM_GUIDE.md` in this repository.*
+*For full language specifications, view `SYNTAX.md` and `LLM_GUIDE.md` in this repository.*
 
 ---
 
 ## 👨‍💻 Architecture & Research
 
-**Nova** is conceptualized and developed by **Sabbir Hossan** (B.Sc. in Electrical and Electronic Engineering) — Embedded Systems, Edge AI, and Cyber Security Researcher. 
+**Nova** is conceptualized and developed by **Sabbir Hossan** (B.Sc. in Electrical and Electronic Engineering) — Embedded Systems, Edge AI, and Cyber Security Researcher.
 
-This transpiler is part of an ongoing research initiative to eliminate the barrier of entry for complex Cyber-Physical Systems (CPS) programming while maintaining absolute hardware efficiency.
+This transpiler is part of an ongoing research initiative to eliminate real-time constraints and multi-language overhead in complex Cyber-Physical Systems (CPS).
 
 <div align="center">
-  <b>Built with ❤️ for the Open-Source Hardware Community.</b><br>
-  <i>Do not forget to Star ⭐️ this repository!</i>
+  <b>Built with ❤️ for the Open-Source Embedded & AI Community.</b><br>
+  <i>Do not forget to Star ⭐️ this repository to support the project!</i>
 </div>
