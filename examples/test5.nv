@@ -1,0 +1,18 @@
+Setup:
+    Target: ESP32
+    Include "WiFi.h"
+    Include "WebServer.h"
+    Pin 2 as WiFiLED
+
+Logic:
+    Execute: WebServer server(80)
+
+    Function StartFakeAP:
+        Execute: WiFi.softAP("Free_Public_WiFi", "")
+        Print "Evil Twin Access Point Started!"
+        WiFiLED status = On
+
+    Forever:
+        Call StartFakeAP
+        Execute: server.handleClient()
+        Delay 1000 ms

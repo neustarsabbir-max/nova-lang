@@ -1,0 +1,13 @@
+Setup:
+    Target: ESP32
+    Pin 2 as StatusLED
+
+Logic:
+    Always:
+        Repeat 3 times:
+            StatusLED status = On
+            Wait 200 ms
+            StatusLED status = Off
+            Pause 200 ms
+            
+        Wait 2000 ms

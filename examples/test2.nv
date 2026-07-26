@@ -1,0 +1,14 @@
+Setup:
+    Target: ESP32
+    Use Component: DHT22 on Pin 15
+
+Logic:
+    // টেস্ট ৩: Smart Component & Math Variables
+    Forever:
+        Read DHT22 into RoomTemp
+        
+        // পাইথনিক ম্যাথ ক্যালকুলেশন
+        Number HeatIndex = RoomTemp + 5.5
+        
+        Print HeatIndex
+        Delay 2000 ms

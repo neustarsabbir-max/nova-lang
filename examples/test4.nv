@@ -1,0 +1,30 @@
+Setup:
+    Target: ESP32
+    Pin 5 as RelayLock
+    Pin 21 as AlarmBuzzer
+
+Logic:
+    String MasterPass = "7321"
+    String UserInput = "7321" // টেস্ট করার জন্য ডিরেক্ট ভ্যালু দিলাম
+    Number Attempts = 0
+
+    Function CheckLock:
+        If UserInput == MasterPass:
+            Print "Vault Unlocked!"
+            RelayLock status = High
+            Attempts = 0
+        Else:
+            Print "Access Denied!"
+            AlarmBuzzer status = High
+            Wait 1000 ms
+            AlarmBuzzer status = Low
+            Attempts = Attempts + 1
+
+    Always:
+        If Attempts > 3:
+            Print "System Locked! Intruder Alert!"
+            AlarmBuzzer status = High
+            Wait 10000 ms
+        Else:
+            Call CheckLock
+            Wait 2000 ms

@@ -1,0 +1,25 @@
+Setup:
+    Target: ESP32
+    Pin 18 as MotorA
+    Pin 19 as MotorB
+
+Logic:
+    // গ্লোবাল ভেরিয়েবল (কাউন্টার)
+    Number CycleCount = 0
+
+    Always:
+        If CycleCount < 5:
+            Print "PLC Sequence Running..."
+            MotorA status = On
+            Wait 1000 ms
+            MotorA status = Off
+            MotorB status = On
+            Wait 1000 ms
+            MotorB status = Off
+            
+            // কাউন্টার আপডেট (খুবই ট্রিকি পার্ট কম্পাইলারের জন্য)
+            CycleCount = CycleCount + 1
+            Print CycleCount
+        Else:
+            Print "PLC Sequence Complete. System Halting."
+            Wait 5000 ms

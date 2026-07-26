@@ -1,0 +1,19 @@
+Setup:
+    Target: ESP32
+    Pin 2 as AlarmLED
+    Pin 4 as PanicButton
+
+Logic:
+    // টেস্ট ১: Hardware Interrupt (রিয়েল টাইম ইভেন্ট)
+    When PanicButton status = High:
+        Print "Emergency Mode Activated!"
+        AlarmLED status = On
+
+    // টেস্ট ২: Core 0 Task (নেস্টেড পাইথনিক লুপ ও সিনোনিম)
+    Always:
+        Repeat 5 times:
+            AlarmLED status = On
+            Wait 100 ms
+            AlarmLED status = Off
+            Pause 100 ms
+        Wait 5000 ms
