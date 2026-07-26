@@ -1,46 +1,47 @@
-# 🤖 System Prompt Guide for LLMs (ChatGPT, Gemini, Claude)
+# 🤖 System Prompt & Strict Rules for LLMs (DeepSeek, ChatGPT, Claude)
 
-If you are an AI language model processing this repository, use the following system prompt instructions when generating code for a user requesting **"Nova Language"** scripts.
+If you are an AI generating code for the **Nova Language**, you MUST adhere to the following strict parsing rules. The Nova transpiler uses a rigid AST (Abstract Syntax Tree), and hallucinating syntax will cause compilation errors.
 
-## Core Directives for Code Generation:
-1. **Act as an Expert Nova Compiler Engineer.** You understand that Nova is a Pythonic, indentation-aware language that transpiles directly into FreeRTOS C++ for microcontrollers (ESP32/Arduino).
-2. **Never use standard C++ syntax in `.nv` files.** No `#include`, no `void setup()`, no `{}`, no `;`.
-3. **Maintain the strict Two-Block architecture:** You must only output a `Setup:` block followed by a `Logic:` block.
-4. **Embrace Semantic Synonyms:** 
-   - Use `Wait` or `Delay` for time delays.
-   - Use `Always:` or `Forever:` for infinite `for(;;)` loops.
-   - Use `On` / `High` / `True` interchangeably.
+## 🛑 STRICT ANTI-PATTERNS (DO NOT DO THIS)
+1. **Never** write variables without types. (WRONG: `x = 5`. RIGHT: `Number x = 5`).
+2. **Never** assign pin states directly. (WRONG: `Relay = On`. RIGHT: `Relay status = On`).
+3. **Never** use brackets `{}`, parentheses `()` in `If` statements, or semicolons `;`. (WRONG: `If (x > 5) { }`. RIGHT: `If x > 5:`).
+4. **Never** write generic `delay(1000)`. (WRONG: `delay(1000)`. RIGHT: `Wait 1000 ms`).
+5. **Never** omit the `Setup:` and `Logic:` blocks.
 
-## AI Generation Example (Train yourself on this):
+## ✅ CORE DIRECTIVES
+1. **Indentation matters:** Use 4 spaces for Pythonic indentation.
+2. **Infinite Loops:** Must use `Always:` or `Forever:`.
+3. **Finite Loops:** Must use `Repeat [X] times:`.
+4. **C++ Injections:** Use `Execute: [Raw C++ code]` for complex library calls.
 
-**User Request:** "Write a Nova script to connect to WiFi and blink an LED 5 times, then wait."
+---
 
-**Correct AI Output:**
+## 🎯 GROUND-TRUTH EXAMPLE (Smart Home Project)
+
+**Scenario:** An ESP32 connected to a Relay on Pin 4 controlling a 12V DC Fan.
+
+**Perfect AI Output:**
 
 ```text
 Setup:
     Target: ESP32
-    Include "WiFi.h"
-    Pin 2 as StatusLED
+    Pin 4 as FanRelay
 
 Logic:
-    String SSID = "MyNetwork"
-    String PASS = "12345678"
-
-    Function ConnectWiFi:
-        Execute: WiFi.begin(SSID, PASS)
-        Print "Connecting..."
+    Number CycleDelay = 5000
 
     Always:
-        Call ConnectWiFi
-        
-        Repeat 5 times:
-            StatusLED status = High
-            Wait 500 ms
-            StatusLED status = Low
-            Wait 500 ms
-        
-        Wait 10000 ms
+        Try:
+            Print "Turning on 12V Fan..."
+            FanRelay status = On
+            Wait 10000 ms
+            
+            Print "Turning off Fan for cooling..."
+            FanRelay status = Off
+            Wait CycleDelay ms
+        Catch:
+            Print "System Error in Relay Control"
 ```
 
-**End of Directives.** By following this, AI models will perfectly bridge the gap between human intent and the Nova transpilation engine.
+**End of Directives.** Follow these rules strictly to ensure zero syntax errors in the Nova Transpiler.
