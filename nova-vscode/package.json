@@ -1,0 +1,30 @@
+{
+  "name": "nova-lang",
+  "displayName": "Nova Language Support",
+  "description": "Syntax highlighting for Nova Language (.nv)",
+  "version": "1.0.0",
+  "publisher": "SabbirHossan",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "nova",
+        "aliases": ["Nova", "nova"],
+        "extensions": [".nv"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "nova",
+        "scopeName": "source.nova",
+        "path": "./syntaxes/nova.tmLanguage.json"
+      }
+    ]
+  }
+}
