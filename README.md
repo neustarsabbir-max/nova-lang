@@ -74,7 +74,8 @@ Logic:
         Print "System Failure!"
 2. Transpile to Bare-Metal C++
 Run the compiler in your terminal: nova run project.nv
-Nova instantly generates a highly optimized project.cpp file utilizing xTaskCreatePinnedToCore and vTaskDelay. Paste this into Arduino IDE or PlatformIO and flash it!
+Nova instantly generates a highly optimized project.cpp file utilizing xTaskCreatePinnedToCore and vTaskDelay.
+Paste this into Arduino IDE or PlatformIO and flash it!
 
 📦 Using the Nova Package Manager
 Need to build an IoT Dashboard or Cyber-Security Fake AP? Fetch libraries instantly!
